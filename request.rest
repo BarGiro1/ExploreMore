@@ -1,2 +1,14 @@
 ###
-Get http://localhost:3000
+Get http://localhost:3000/posts
+###
+
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+{
+   "title": "Updated Title",
+    "content": "This is the updated content of the post."
+}
+
+###
+GET http://localhost:3000/posts/?id=67d368fc9af79facedf463ef
