@@ -1,12 +1,15 @@
 const request = require("supertest");
-const app = require("../server");
+const appInit = require("../server");
 const mongoose = require("mongoose");
 const postModel = require("../models/posts_models"); // משמש לאיפוס ה-DB
 
 const testPosts = require("./test_Posts");
 
+let app;
+
 beforeAll(async () => {
     console.log("beforeAll");
+    app = await appInit();
     await postModel.deleteMany();
 });
 
