@@ -1,21 +1,30 @@
-const express = require('express');
-const dotenv= require('dotenv').config();
-const app = express();
-
-
+const dotenv = require('dotenv').config();
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URL);
+const bodyParser = require('body-parser');
+
+const express = require('express');
+const app = express();
+const postsRoutes = require('./routes/posts_routes');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/posts', postsRoutes);
+
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to Database'));
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const initApp = () => {
+  return new Promise(async(resolve, reject) => {
+    await mongoose
+      .connect(process.env.MONGO_URL)
+      .then(() => {
+        resolve(app);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
-
-
- const postsRoutes = require('./routes/posts_routes');
- app.use('/posts', postsRoutes); 
- 
- module.exports = app;
+module.exports = initApp;
