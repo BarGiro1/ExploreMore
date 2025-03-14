@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "test": "jest --detectOpenHandles --forceExit"  
+    "test": "jest --detectOpenHandles --coverage --forceExit"
   },
   "author": "bar",
   "license": "ISC",
