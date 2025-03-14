@@ -10,6 +10,11 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
+    owner:
+    {
+        type: String,
+        required: true
+    }
 });
 
 const postModel = mongoose.model('Post', postSchema);
