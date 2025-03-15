@@ -1,6 +1,6 @@
- const postModel = require('../models/posts_models');
- 
- const getAllPosts = async (req, res) => {
+ import postModel from '../models/posts_models';
+ import { Request, Response } from 'express';
+ const getAllPosts = async (req:Request , res: Response) => {
     const ownerFilter = req.query.owner;
     try {
         if (ownerFilter) {
@@ -14,22 +14,22 @@
     }
     catch (error) {
         res.status
-        (400).send(error.message);
+        (400).send(error);
     }};
 
 
-    const createPost = async (req, res) => {
+    const createPost = async (req:Request , res: Response) => {
         try {
             const postBody = req.body;
             const post = await postModel.create(postBody);
             res.status(201).json(post);
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            res.status(400).json({ error});
         }
     };
     
    
- const getPostById = async(req, res) => {
+ const getPostById = async(req:Request , res: Response) => {
     const postId = req.params.id;
     try{
         const post =await postModel.findById(postId);
@@ -40,19 +40,19 @@
             res.status(404).send('Post not found');
         }
     }catch(error) {
-            res.status(400).send(error.message);
+            res.status(400).send(error);
         }
     };
-    const getPostByOwner = async (req, res) => {
+    const getPostByOwner = async (req:Request , res: Response) => {
         const owner = req.query.owner;
         try {
             const posts = await postModel.find({ owner: owner });
             res.send(posts);
         } catch (error) {
-            res.status(400).send(error.message);
+            res.status(400).send(error);
         }
     };    
- const deletePost = async (req, res) => {
+ const deletePost = async (req:Request , res: Response) => {
     const postId = req.params.id;
     try {
         const post = await postModel.findByIdAndDelete(postId);
@@ -63,10 +63,10 @@
             res.status(404).send('Post not found');
         }
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).send(error);
     }
 }
- module.exports = {
+export default {
     getAllPosts,
     createPost,
     getPostById,

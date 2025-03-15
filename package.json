@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js",
-    "test": "jest --detectOpenHandles --coverage --forceExit"
+    "test": "tsc && jest --detectOpenHandles --forceExit",
+    "start": "tsc && node dist/app.js",
+    "lint": "eslint . --ext .ts",
+    "dev": "nodemon ./src/app.ts"
   },
   "author": "bar",
   "license": "ISC",
@@ -18,8 +19,18 @@
     "parser": "^0.1.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@types/express": "^4.17.1",
+    "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.2",
+    "eslint": "^9.22.0",
+    "globals": "^16.0.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.9",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1"
   }
 }
