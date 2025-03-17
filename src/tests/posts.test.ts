@@ -42,8 +42,14 @@ describe("Posts Test", () => {
             expect(response.body.title).toBe(testPosts[i].title);
             expect(response.body.content).toBe(testPosts[i].content);
             expect(response.body.owner).toBe(testPosts[i].owner);
+            expect(response.body.numOfComments).toBe(0);
+            expect(response.body.numOfLikes).toBe(0);
+            expect(response.body.createdAt).toBeDefined();
+            expect(response.body.updatedAt).toBeDefined();
+            
 
             // שמירת הפוסט שנוצר עם ה-_id שהתקבל מהשרת
+            console.log(response.body);
             createdPosts.push({ ...testPosts[i], _id: response.body._id });
         }
     });
@@ -74,5 +80,10 @@ describe("Posts Test", () => {
 
         const response2 = await request(app).get("/posts/" + postToDelete._id);
         expect(response2.statusCode).toBe(404);
+    });
+
+    test("Test Create Post Fail", async () => {
+        const response = await request(app).post("/posts").send({ title: "title" });
+        expect(response.statusCode).toBe(400);
     });
 });
