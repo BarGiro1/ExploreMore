@@ -7,8 +7,9 @@ Content-Type: application/json
 
 {
    "title": "Updated Title",
-    "content": "This is the updated content of the post."
+    "content": "This is the updated content of the post.",
+    "owner": "5f7d1b3b9af79facedf463e9"
 }
 
 ###
-GET http://localhost:3000/posts/?id=67d368fc9af79facedf463ef
+GET http://localhost:3000/comments/?postId=67d9ca8ba6b0d96f229b36c0

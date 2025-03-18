@@ -49,7 +49,6 @@ describe("Posts Test", () => {
             
 
             // שמירת הפוסט שנוצר עם ה-_id שהתקבל מהשרת
-            console.log(response.body);
             createdPosts.push({ ...testPosts[i], _id: response.body._id });
         }
     });
@@ -72,7 +71,12 @@ describe("Posts Test", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(1);
     });
-
+test("Test update post", async () => {
+        const postToUpdate = createdPosts[0]; // לוקחים פוסט עם _id מהמערך החדש
+        const response = await request(app).put("/posts/" + postToUpdate._id).send({ title: "new title" });
+        expect(response.statusCode).toBe(200);
+        expect(response.body.title).toBe("new title");
+    }   );
     test("Test Delete post", async () => {
         const postToDelete = createdPosts[0]; // לוקחים פוסט עם _id מהמערך החדש
         const response = await request(app).delete("/posts/" + postToDelete._id);
