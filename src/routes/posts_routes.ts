@@ -24,7 +24,7 @@ import postController from '../controllers/posts_controllers';
 router.get('/', postController.getAll);
 router.post('/', postController.create);
 router.get("/:id", postController.getById);
-router.delete("/:id", postController.delete);
-router.put("/:id", postController.update);
+router.delete("/:id", postController.delete_.bind(postController));
+router.put("/:id", postController.update.bind(postController));
 
 export default router;
