@@ -1,9 +1,11 @@
-import express, { Router } from 'express';
-const router = express.Router();
+import express from 'express';
 import likesController from '../controllers/likes_controllers';
 
-router.get('/user/:userId',likesController.getLikesByUser);
-router.delete('/:id', likesController.deleteLike);
-router.post('/', likesController.createLike);
+const router = express.Router();
+
+router.get('/', likesController.getAll);
+router.post('/', likesController.create);
+router.delete('/:id', likesController.delete); 
+router.get('/:id', likesController.getById); 
 
 export default router;

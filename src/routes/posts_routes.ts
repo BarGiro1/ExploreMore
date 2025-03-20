@@ -1,14 +1,30 @@
-import express, { Router } from 'express';
+/*import express, { Router } from 'express';
 const router = express.Router();
 import postController from '../controllers/posts_controllers';
 
-router.get('/', postController.getAllPosts);
-router.post('/', postController.createPost);
+router.get('/', postController.getAll.bind(postController));
+router.post('/', postController.create.bind(postController));
 router.get("/:id",(req,res)=>{
-    postController.getPostById(req,res);
+    postController.getById(req,res);
 });
-router.get('/user/:userId', postController.getPostByOwner)
-router.delete("/:id", postController.deletePost);
-router.put("/:id", postController.updatePost);
+router.delete("/:id",(req,res)=>{
+    postController.delete_(req,res);
+});
+router.put("/:id",(req,res)=>{
+    postController.update(req,res);
+}
+);
+
+export default router;
+*/
+import express from 'express';
+const router = express.Router();
+import postController from '../controllers/posts_controllers';
+
+router.get('/', postController.getAll);
+router.post('/', postController.create);
+router.get("/:id", postController.getById);
+router.delete("/:id", postController.delete);
+router.put("/:id", postController.update);
 
 export default router;

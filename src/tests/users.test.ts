@@ -40,8 +40,8 @@ describe("Userss Test", () => {
             const response = await request(app).post("/users").send(testUsers[i]);
             expect(response.statusCode).toBe(201);
             expect(response.body.userName).toBe(testUsers[i].userName);
-            expect(response.body.email).toBe(testUsers[i].email);
-            expect(response.body.password).toBe(testUsers[i].password);
+            expect(response.body.content).toBe(testUsers[i].email);
+            expect(response.body.owner).toBe(testUsers[i].password);
             expect(response.body.createdAt).toBeDefined();
             expect(response.body.updatedAt).toBeDefined();
             
@@ -54,17 +54,18 @@ describe("Userss Test", () => {
     test("Test get all users after creating them", async () => {
         const response = await request(app).get("/users");
         expect(response.statusCode).toBe(200);
+        
         expect(response.body.length).toBe(createdUsers.length);
     });
     test ("test create new user", async () => {
         for (let i = 0; i < testUsers.length; i++) {
-            const response = await request(app).post("/users").send(testUsers[i]);
-            expect(response.statusCode).toBe(201);
-            expect(response.body.userName).toBe(testUsers[i].userName);
-            expect(response.body.email).toBe(testUsers[i].email);
-            expect(response.body.password).toBe(testUsers[i].password);
-            expect(response.body.createdAt).toBeDefined();
-            expect(response.body.updatedAt).toBeDefined();
+                    const response = await request(app).post("/users").send(testUsers[i]);
+                    expect(response.statusCode).toBe(201);
+                    expect(response.body.userName).toBe(testUsers[i].userName);
+                    expect(response.body.email).toBe(testUsers[i].email);
+                    expect(response.body.password).toBe(testUsers[i].password);
+                    expect(response.body.createdAt).toBeDefined();
+                    expect(response.body.updatedAt).toBeDefined();
     }} ) ;
     test ("Test get user by id", async () => {
         const userToGet = createdUsers[0]; // לוקחים פוסט עם _id מהמערך החדש
