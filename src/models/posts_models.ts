@@ -1,7 +1,7 @@
 import mongoose, { Schema, Types } from "mongoose";
 
 
-interface IPost {
+export interface IPost {
   title: string;
   content: string;
   owner: Types.ObjectId; 
