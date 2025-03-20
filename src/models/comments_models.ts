@@ -1,6 +1,6 @@
 import mongoose, { Schema,Types } from "mongoose";
 
-interface IComments {
+export interface IComments {
   userId: Types.ObjectId;
   postId: Types.ObjectId;
   content: string;

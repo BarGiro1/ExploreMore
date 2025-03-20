@@ -71,11 +71,13 @@ test ("test update comments", async () => {
     expect(response.body.content).toBe("updated content");
 });
 test("test delete comments", async () => {
-    const commentsToDelete = createdComments[0];
+    const commentsToDelete = createdComments[0]; // לוקחים תגובה עם _id מהמערך החדש
     const response = await request(app).delete("/comments/" + commentsToDelete._id);
+    
     expect(response.statusCode).toBe(200);
-    expect(response.body._id).toBe(commentsToDelete._id);
+    expect(response.body._id).toBe(commentsToDelete._id); // בדיקה שהשרת מחזיר את ה-_id שנמחק
 });
+
 }
 );
 

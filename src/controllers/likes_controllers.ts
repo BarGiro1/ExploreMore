@@ -1,5 +1,8 @@
- import likesModel from '../models/likes_models';
+ import likesModel , {ILikes} from '../models/likes_models';
  import { Request, Response } from 'express';
+ import createController from './base_controller';
+
+ const likes_controllers= createController<ILikes>(likesModel);
 
 const getLikesByUser = async (req:Request , res: Response) => {
     const userId = req.params.userId;
@@ -10,6 +13,9 @@ const getLikesByUser = async (req:Request , res: Response) => {
         res.status(400).send(error);
     }
 }
+
+
+
 const createLike = async (req:Request , res: Response) => {
     try {
         const likeBody = req.body;

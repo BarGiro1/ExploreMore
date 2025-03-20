@@ -1,6 +1,6 @@
 import mongoose, { Schema, Types } from "mongoose";
 
-interface ILikes {
+export interface ILikes {
   userId: Types.ObjectId;
   postId: Types.ObjectId;
   createdAt?: Date;
