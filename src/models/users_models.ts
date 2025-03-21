@@ -1,33 +1,41 @@
 import mongoose, { Schema } from "mongoose";
 
-export interface IUsers {
-  userName: string;
+export interface IUser {
+  username: string;
   email: string;
   password: string;
+  _id?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  refreshToken?: string[];
 }
 
-const usersSchema = new Schema<IUsers>(
+const userSchema = new Schema<IUser>(
   {
-    userName: {
+    username: {
       type: String,
       required: true,
+      unique: true,
     },
     email: {
       type: String,
       required: true,
+      unique: true,
     },
-    password : {
+    password: {
       type: String,
       required: true,
     },
+    refreshToken: {
+      type: [String],  // מערך של מחרוזות
+      default: [],     // ברירת מחדל היא מערך ריק
+    },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
-const UsersModel = mongoose.model<IUsers>("Users",usersSchema);
+const userModel = mongoose.model<IUser>("Users", userSchema);
 
-export default UsersModel;
+export default userModel;

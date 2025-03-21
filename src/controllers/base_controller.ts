@@ -28,8 +28,9 @@ class BaseController<T>{
      };
      
 async create(req:Request , res: Response)  {
+    const postBody = req.body;
     try {
-        const postBody = req.body;
+      
         const post = await this.model.create(postBody);
         res.status(201).json(post);
     } catch (error) {
@@ -95,11 +96,12 @@ async getById (req:Request , res: Response)  {
     
 }
 
-const createController=<T>(model:Model<T>) => {
+/*const createController=<T>(model:Model<T>) => {
     return new BaseController(model);
 }
 
-export default createController;
+*/
+export default BaseController;
 
    
   
