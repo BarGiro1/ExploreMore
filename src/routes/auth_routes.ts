@@ -1,0 +1,10 @@
+import express from 'express';
+import authControllers from '../controllers/auth_controller';
+const router = express.Router();
+
+router.post('/register', authControllers.register);
+router.post('/login',authControllers.login);
+router.post('/refresh',authControllers.refresh);
+router.post('/logout',authControllers.logout);
+
+export default router;

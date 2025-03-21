@@ -1,7 +1,7 @@
 import commentsModel,{IComments} from '../models/comments_models';
  import { Request, Response } from 'express';
- import createController from './base_controller';
+ import BaseController from './base_controller';
 
- const comments_controllers= createController<IComments>(commentsModel);
+ const comments_controllers=new BaseController(commentsModel);
  
      export default comments_controllers;

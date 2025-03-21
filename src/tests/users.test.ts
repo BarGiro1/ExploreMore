@@ -10,7 +10,7 @@ import request from "supertest";
  // ממשק Post כדי לוודא תאימות
  interface Users {
      _id?: string;
-     userName: string;
+     username: string;
      email: string;
      password: string;
  }
@@ -39,7 +39,7 @@ import request from "supertest";
          for (let i = 0; i < testUsers.length; i++) {
              const response = await request(app).post("/users").send(testUsers[i]);
              expect(response.statusCode).toBe(201);
-             expect(response.body.userName).toBe(testUsers[i].userName);
+             expect(response.body.username).toBe(testUsers[i].username);
              expect(response.body.email).toBe(testUsers[i].email);
              expect(response.body.password).toBe(testUsers[i].password);
              expect(response.body.createdAt).toBeDefined();
@@ -60,7 +60,7 @@ import request from "supertest";
          for (let i = 0; i < testUsers.length; i++) {
              const response = await request(app).post("/users").send(testUsers[i]);
              expect(response.statusCode).toBe(201);
-             expect(response.body.userName).toBe(testUsers[i].userName);
+             expect(response.body.username).toBe(testUsers[i].username);
              expect(response.body.email).toBe(testUsers[i].email);
              expect(response.body.password).toBe(testUsers[i].password);
              expect(response.body.createdAt).toBeDefined();
@@ -75,9 +75,9 @@ import request from "supertest";
  );
  test("Test update user", async () => {
          const userToUpdate = createdUsers[0]; // לוקחים פוסט עם _id מהמערך החדש
-         const response = await request(app).put("/users/" + userToUpdate._id).send({ userName: "noa" });
+         const response = await request(app).put("/users/" + userToUpdate._id).send({ username: "noa" });
          expect(response.statusCode).toBe(200);
-         expect(response.body.userName).toBe("noa");
+         expect(response.body.username).toBe("noa");
      }
  
  );} );

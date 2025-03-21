@@ -4,9 +4,19 @@ import mongoose from "mongoose";
 import postModel from "../models/posts_models"; // משמש לאיפוס ה-DB
 import { Express } from "express";
 import testPostsRaw from "./test_Posts.json";
+import { IUser} from "../models/users_models";
+import userModel from "../models/users_models";
+var app: Express;
 
-let app: Express;
 
+
+type User = IUser & { token?: string };
+
+const testuser: User = { 
+    username: "bar",
+    password: "1234",
+    email: "BAR@GMAIL.COM"
+};
 // ממשק Post כדי לוודא תאימות
 interface Post {
     _id?: string;
@@ -22,6 +32,11 @@ beforeAll(async () => {
     console.log("beforeAll");
     app = await appInit();
     await postModel.deleteMany();
+    await userModel.deleteMany();
+     await request(app).post("/auth/register").send(testuser);
+    const response = await request(app).post("/auth/login").send(testuser);
+    testuser.token = response.body.token;
+    expect(testuser.token).toBeDefined();
 });
 
 afterAll(async () => {
@@ -37,7 +52,9 @@ describe("Posts Test", () => {
 
     test("Test create new posts", async () => {
         for (let i = 0; i < testPosts.length; i++) {
-            const response = await request(app).post("/posts").send(testPosts[i]);
+            const response = await request(app).post("/posts").set 
+            ({authorization: "JWT " + testuser.token})
+            .send(testPosts[i]);
             expect(response.statusCode).toBe(201);
             expect(response.body.title).toBe(testPosts[i].title);
             expect(response.body.content).toBe(testPosts[i].content);
@@ -79,7 +96,7 @@ test("Test update post", async () => {
     }   );
     test("Test Delete post", async () => {
         const postToDelete = createdPosts[0]; // לוקחים פוסט עם _id מהמערך החדש
-        const response = await request(app).delete("/posts/" + postToDelete._id);
+        const response = await request(app).delete("/posts/" + postToDelete._id).set({ authorization: "JWT " + testuser.token });
         expect(response.statusCode).toBe(200);
 
         const response2 = await request(app).get("/posts/" + postToDelete._id);
@@ -87,7 +104,7 @@ test("Test update post", async () => {
     });
 
     test("Test Create Post Fail", async () => {
-        const response = await request(app).post("/posts").send({ title: "title" });
+        const response = await request(app).post("/posts").send({ title: "title" }).set({ authorization: "JWT " + testuser.token });
         expect(response.statusCode).toBe(400);
     });
 });
