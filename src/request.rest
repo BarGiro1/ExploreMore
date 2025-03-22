@@ -1,7 +1,6 @@
 ###
-Get http://localhost:3000/posts
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RkZTdiNTI0NWJjY2Q3NWIzMGQ3MTAiLCJpYXQiOjE3NDI1OTYwMjMsImV4cCI6MTc0Mjg1NTIyM30.YptISZuYPXwESWcFtCAGTclC_AqXM9gaq6o0l5MrwOk
-
+Get http://localhost:3001/posts
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlMDFjMmZhODc2MDc4NjVmYjQzNDkiLCJpYXQiOjE3NDI2MDM0NTIsImV4cCI6MTc0Mjg2MjY1Mn0.eEfsRq-LQ2Kx7oPGBI9RsytEvWihNtMVbsxTXxZNb30
 ###
 
 POST http://localhost:3000/posts
@@ -21,7 +20,7 @@ GET http://localhost:3000/comments/?postId=67d9ca8ba6b0d96f229b36c0
 
 
 ###
-POST http://localhost:3000/auth/register
+POST http://localhost:3001/auth/register
 Content-Type: application/json
 
 {
@@ -32,12 +31,12 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:3000/auth/login
+POST http://localhost:3001/auth/login
 Content-Type: application/json
 
 {
     "username": "admin",
-    "password": "123456"
+    "password": "admin"
 }
 
 
@@ -53,6 +52,15 @@ Content-Type: application/json
 
 ###
 POST http://localhost:3000/auth/logout
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RkZWMwNTNiMWFlZDE4MmUxZTgwMDEiLCJyYW5kb20iOiIwLjQ3NzI0NDQzNzk0NzYyNzk0IiwiaWF0IjoxNzQyNTk3Mjc0LCJleHAiOjE3NDMyMDIwNzR9.jN6sZj6ZYXlTGkuSQ8ZAHq__1T11Cj13DOzmxVPCMes"
+}
+
+
+###
+GET http://localhost:3001/usres/me
 Content-Type: application/json
 
 {

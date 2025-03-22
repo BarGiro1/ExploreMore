@@ -13,9 +13,14 @@ import authRoutes from './routes/auth_routes';
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-console.log('here');
-app.use('/auth', authRoutes);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  res.header("Access-Control-Allow-Methods", "*");
+  next();
+});
 
+app.use('/auth', authRoutes);
 app.use('/posts', postsRoutes);
 app.use('/comments', commentsRoutes);
 app.use('/users', usersRoutes);
