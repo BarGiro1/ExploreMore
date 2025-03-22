@@ -176,15 +176,15 @@ const Home: React.FC = () => {
       try {
         await updateUserProfile(accessToken, updatedProfile);
         // Handle image upload separately
-        if (newImage) {
-          const formData = new FormData();
-          formData.append('image', newImage);
-          await apiClient.put('/users/image', formData, {
-            headers: {
-              'authorization': `${accessToken}`,
-            },
-          });
-        }
+        // if (newImage) {
+        //   const formData = new FormData();
+        //   formData.append('image', newImage);
+        //   await apiClient.put('/users/image', formData, {
+        //     headers: {
+        //       'authorization': `${accessToken}`,
+        //     },
+        //   });
+        // }
         const profile = await fetchUserProfile(accessToken);
         setProfile(profile);
         setProfileEditing(false);
@@ -236,11 +236,10 @@ const Home: React.FC = () => {
           <ToastContainer />
           <Row className="justify-content-md-center">
             <Col md={8}>
-              <h2 className="text-center">Home</h2>
+              <h2 className="text-center"><hr></hr></h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleCreatePost}>
                 <Form.Group className="mb-3" controlId="formTitle">
-                  <Form.Label>Title</Form.Label>
                   <Form.Control
                     type="text"
                     value={title}
@@ -250,7 +249,6 @@ const Home: React.FC = () => {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formContent">
-                  <Form.Label>Content</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={3}

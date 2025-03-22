@@ -62,7 +62,9 @@ export const unlikePost = async (accessToken: string, postId: string): Promise<v
 };
 
 export const commentOnPost = async (accessToken: string, postId: string, comment: string): Promise<void> => {
-  await apiClient.post(`/comments/${postId}`, { 'content': comment }, {
+  await apiClient.post(`/comments`, { 
+    'postId': postId,
+    'content': comment }, {
     headers: {
       'authorization': `${accessToken}`,
     },
