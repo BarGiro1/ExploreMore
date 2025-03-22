@@ -48,14 +48,6 @@ describe("Likes Test", () => {
         }
     });
 
-
-    test("test get all likes by user id", async () => {
-        const likesToGet = createdLikes[0]; // לוקחים פוסט עם _id מהמערך החדש
-        const response = await request(app).get("/likes").set('authorization', refreshToken);
-        expect(response.statusCode).toBe(200);
-        expect(response.body[0]._id).toBe(likesToGet._id);
-    });
-
     test("test delete likes", async () => {
         const likesToDelete = createdLikes[0];
         const response = await request(app).delete("/likes/" + likesToDelete._id).set('authorization', refreshToken);

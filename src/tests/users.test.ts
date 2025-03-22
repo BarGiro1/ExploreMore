@@ -1,11 +1,14 @@
 import request from "supertest";
- import appInit from "../server";
- import mongoose from "mongoose";
- import usersModel from "../models/users_models"; // משמש לאיפוס ה-DB
- import { Express } from "express";
- import testusersRaw from "./test_users.json";
- 
- let app: Express;
+import appInit from "../server";
+import mongoose from "mongoose";
+import usersModel from "../models/users_models"; // משמש לאיפוס ה-DB
+import { Express } from "express";
+import testusersRaw from "./test_users.json";
+import { login } from "./test_utils";
+
+let app: Express;
+var refreshToken: string = "";
+var userId: string = "";
  
  // ממשק Post כדי לוודא תאימות
  interface Users {
@@ -21,6 +24,7 @@ import request from "supertest";
  beforeAll(async () => {
      console.log("beforeAll");
      app = await appInit();
+     [refreshToken, userId] = await login(app);
      await usersModel.deleteMany();
  });
  
@@ -37,7 +41,7 @@ import request from "supertest";
  
      test("Test create new users", async () => {
          for (let i = 0; i < testUsers.length; i++) {
-             const response = await request(app).post("/users").send(testUsers[i]);
+             const response = await request(app).post("/users").set('authorization', refreshToken).send(testUsers[i]);
              expect(response.statusCode).toBe(201);
              expect(response.body.username).toBe(testUsers[i].username);
              expect(response.body.email).toBe(testUsers[i].email);
@@ -58,7 +62,7 @@ import request from "supertest";
      });
      test ("test create new user", async () => {
          for (let i = 0; i < testUsers.length; i++) {
-             const response = await request(app).post("/users").send(testUsers[i]);
+             const response = await request(app).post("/users").set('authorization', refreshToken).send(testUsers[i]);
              expect(response.statusCode).toBe(201);
              expect(response.body.username).toBe(testUsers[i].username);
              expect(response.body.email).toBe(testUsers[i].email);
@@ -75,7 +79,7 @@ import request from "supertest";
  );
  test("Test update user", async () => {
          const userToUpdate = createdUsers[0]; // לוקחים פוסט עם _id מהמערך החדש
-         const response = await request(app).put("/users/" + userToUpdate._id).send({ username: "noa" });
+         const response = await request(app).put("/users").set('authorization', refreshToken).send({ username: "noa" });
          expect(response.statusCode).toBe(200);
          expect(response.body.username).toBe("noa");
      }
