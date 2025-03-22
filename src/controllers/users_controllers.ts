@@ -1,6 +1,17 @@
 import usersModel from '../models/users_models';
-  import { Request, Response } from 'express';
- 
+import { Request, Response } from 'express';
+
+
+const getMe = async (req: Request, res: Response) => {
+    const user = await usersModel.findById(req.params.userId);
+    console.log('Get me', user);
+    try {
+        res.send(user);
+    } catch (error) {
+        res.status(400)
+    }
+}
+
      const getAllUsers = async (req:Request , res: Response) => {
          try {
              const users = await usersModel.find();
@@ -36,7 +47,7 @@ import usersModel from '../models/users_models';
          }
          
      const updateUsers = async (req:Request , res: Response) => {
-         const userId = req.params.id;
+         const userId = req.params.userId;
          const userBody = req.body;
          try {
              const user = await usersModel.findByIdAndUpdate
@@ -51,7 +62,7 @@ import usersModel from '../models/users_models';
              res.status(400).send(error);
          }
      }
-     export default { getAllUsers, createUsers, getUserById, updateUsers}
+     export default { getAllUsers, createUsers, getUserById, updateUsers, getMe };
  
  
          
