@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import { login } from '../services/AuthService'; // Import the login function
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login submitted:', { email, password });
+    try {
+      const response = await login(username, password); // Call the login function
+      console.log('Login successful:', response);
+      // Handle successful login, e.g., store tokens, redirect, etc.
+      toast.success('Login successful!');
+    } catch (error) {
+      console.error('Login failed:', error);
+      toast.error('Login failed. Please check your credentials and try again.');
+    }
   };
 
   return (
     <div className="vh-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: '#f2f2f2' }}>
+      <ToastContainer />
       <div
         className="p-4 shadow-sm"
         style={{
@@ -25,8 +37,8 @@ const Login = () => {
         <div className="text-center mb-3">
           <h4 className="fw-bold mb-1">Log in</h4>
           <small>
-           Don’t have an account? <a href="/register">Sign up</a></small>
-
+            Don’t have an account? <a href="/register">Sign up</a>
+          </small>
         </div>
 
         <div className="d-grid gap-2 mb-3">
@@ -48,13 +60,13 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label small">Your email</label>
+            <label className="form-label small">Your username</label>
             <input
-              type="email"
+              type="text"
               className="form-control rounded-pill px-3 py-2"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="username"
               required
             />
           </div>
@@ -68,12 +80,11 @@ const Login = () => {
               placeholder="********"
               required
             />
-            
           </div>
           <button
             type="submit"
             className="btn w-100 rounded-pill py-2"
-            style={{ backgroundColor: '#f4a261', color: '#fff', fontWeight: 'bold' }}
+            style={{ backgroundColor: '#9933ff', color: '#fff', fontWeight: 'bold' }}
           >
             Login
           </button>
