@@ -5,6 +5,7 @@ export interface IPost {
   title: string;
   content: string;
   owner: Types.ObjectId; 
+  imageUrl?: string;
   numOfComments: number;
   numOfLikes: number;
   createdAt?: Date;
@@ -26,6 +27,10 @@ const postSchema = new Schema<IPost>(
       type: Schema.Types.ObjectId,
       ref: "User", 
       required: true,
+    },
+    imageUrl: {
+      type: String,
+      required: false,
     },
     numOfComments: {
       type: Number,

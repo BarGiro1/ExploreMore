@@ -4,6 +4,7 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
+  imageUrl?: string;
   _id?: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -25,6 +26,11 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+    },
+    imageUrl: {
+      type: String,
+      required: false,
+      default: process.env.DOMAIN_BASE_URL + "public/avatar.png",
     },
     refreshToken: {
       type: [String],  // מערך של מחרוזות

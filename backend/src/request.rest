@@ -71,3 +71,8 @@ Content-Type: application/json
 ###
 Get http://localhost:3001/comments
 content-type: application/json
+
+
+
+###
+POST http://localhost:3001/files

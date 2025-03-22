@@ -10,6 +10,7 @@ import commentsRoutes from './routes/comments_routes';
 import usersRoutes from './routes/users_routes';
 import likesRoutes from './routes/likes_routes';
 import authRoutes from './routes/auth_routes';
+import fileRoutes from './routes/files_routes';
 
 
 const app = express();
@@ -27,6 +28,9 @@ app.use('/posts', postsRoutes);
 app.use('/comments', commentsRoutes);
 app.use('/users', usersRoutes);
 app.use('/likes', likesRoutes);
+app.use('/files', fileRoutes);
+app.use('/public', express.static('public'));
+
 
 if (process.env.NODE_ENV === 'development') {
   const options = {
