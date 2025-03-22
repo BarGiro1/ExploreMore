@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { register } from '../services/AuthService'; // Import the register function
+import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
 import { toast, ToastContainer } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
-  const navigate = useNavigate();
-
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { register } = useAuth(); // Get the register function from AuthContext
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register(email, username, password); // Call the register function
+      await register(email, username, password); // Call the register function from AuthContext
       console.log('Registration successful');
-      // Handle successful registration, e.g., redirect to login page
       toast.success('Registration successful!');
-      navigate('/login');
-
     } catch (error) {
       console.error('Registration failed:', error);
       toast.error('Registration failed. Please try again.');

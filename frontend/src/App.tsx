@@ -1,14 +1,17 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import AuthRoutes from './routes/AuthRoutes';
 
-const App = () => {
+const App: React.FC = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-    </Routes>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/auth/*" element={<AuthRoutes />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 

@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { login } from '../services/AuthService'; // Import the login function
+import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useAuth(); // Get the login function from AuthContext
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await login(username, password); // Call the login function
-      console.log('Login successful:', response);
-      // Handle successful login, e.g., store tokens, redirect, etc.
+      await login(username, password); 
+      console.log('Login successful');
       toast.success('Login successful!');
     } catch (error) {
       console.error('Login failed:', error);
