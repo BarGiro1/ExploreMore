@@ -28,7 +28,7 @@ class PostController extends BaseController<IPost>{
         
         const page = parseInt(req.query.page as string) || 1;
 
-
+        console.log('Asking for page', page);
         var posts;
         try {
             if (ownerFilter) {
@@ -72,7 +72,6 @@ class PostController extends BaseController<IPost>{
                     },
                 ]).skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
             }
-console.log(posts);
             res.send(posts);
 
         }

@@ -10,8 +10,8 @@ export interface LikeResponse {
   // Define the structure of the like response here
 }
 
-export const fetchPosts = async (accessToken: string): Promise<Post[]> => {
-  const response = await apiClient.get<Post[]>('/posts', {
+export const fetchPosts = async (accessToken: string, page: Number = 1): Promise<Post[]> => {
+  const response = await apiClient.get<Post[]>(`/posts?page=${page}`, {
     headers: {
       'authorization': `${accessToken}`,
     },

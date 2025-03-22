@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchPosts, createPost, likePost, unlikePost, commentOnPost, deletePost, updatePost } from '../services/PostService';
 import { fetchUserProfile, updateUserProfile } from '../services/UserService';
@@ -32,19 +32,37 @@ const Home: React.FC = () => {
   const [newUsername, setNewUsername] = useState('');
   const [newImage, setNewImage] = useState<File | null>(null);
   const [showUserPosts, setShowUserPosts] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const lastPostRef = useCallback((node: HTMLElement | null) => {
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [hasMore]);
 
   useEffect(() => {
-    const getPosts = async () => {
+    const getPosts = async (page: number) => {
       if (accessToken) {
         try {
-          const posts = await fetchPosts(accessToken);
-          setPosts(posts);
+          const newPosts = await fetchPosts(accessToken, page);
+          setPosts(prevPosts => [...prevPosts, ...newPosts]);
+          setHasMore(newPosts.length > 0);
         } catch (err) {
           toast.error('Failed to fetch posts');
         }
       }
     };
 
+    getPosts(page);
+  }, [accessToken, page]);
+
+  useEffect(() => {
     const getProfile = async () => {
       if (accessToken) {
         try {
@@ -60,7 +78,6 @@ const Home: React.FC = () => {
       }
     };
 
-    getPosts();
     getProfile();
   }, [accessToken]);
 
@@ -70,7 +87,9 @@ const Home: React.FC = () => {
       const newPost: Post = { title, content };
       try {
         await createPost(accessToken, newPost, image);
-        const posts = await fetchPosts(accessToken);
+        setPage(1);
+        setPosts([]);
+        const posts = await fetchPosts(accessToken, 1);
         setPosts(posts);
         setTitle('');
         setContent('');
@@ -86,7 +105,9 @@ const Home: React.FC = () => {
     if (accessToken) {
       try {
         await likePost(accessToken, postId);
-        const posts = await fetchPosts(accessToken);
+        setPage(1);
+        setPosts([]);
+        const posts = await fetchPosts(accessToken, 1);
         setPosts(posts);
         toast.success('Post liked!');
       } catch (err) {
@@ -99,7 +120,9 @@ const Home: React.FC = () => {
     if (accessToken) {
       try {
         await unlikePost(accessToken, postId);
-        const posts = await fetchPosts(accessToken);
+        setPage(1);
+        setPosts([]);
+        const posts = await fetchPosts(accessToken, 1);
         setPosts(posts);
         toast.success('Post unliked!');
       } catch (err) {
@@ -112,8 +135,7 @@ const Home: React.FC = () => {
     if (accessToken) {
       try {
         await deletePost(accessToken, postId);
-        const posts = await fetchPosts(accessToken);
-        setPosts(posts);
+        setPosts(prevPosts => prevPosts.filter(post => post._id !== postId));
         toast.success('Post deleted successfully!');
       } catch (err) {
         toast.error('Failed to delete post');
@@ -129,7 +151,9 @@ const Home: React.FC = () => {
           return;
         }
         await commentOnPost(accessToken, postId, comment);
-        const posts = await fetchPosts(accessToken);
+        setPage(1);
+        setPosts([]);
+        const posts = await fetchPosts(accessToken, 1);
         setPosts(posts);
         toast.success('Comment added!');
       } catch (err) {
@@ -144,7 +168,9 @@ const Home: React.FC = () => {
       const updatedPost: Post = { title: editingTitle, content: editingContent };
       try {
         await updatePost(accessToken, editingPostId, updatedPost);
-        const posts = await fetchPosts(accessToken);
+        setPage(1);
+        setPosts([]);
+        const posts = await fetchPosts(accessToken, 1);
         setPosts(posts);
         setEditingPostId(null);
         setEditingTitle('');
@@ -270,8 +296,8 @@ const Home: React.FC = () => {
               >
                 <FaFilter /> {showUserPosts ? 'Show All Posts' : 'Show My Posts'}
               </Button>
-              {filteredPosts.map((post) => (
-                <Card key={post._id} className="mb-3">
+              {filteredPosts.map((post, index) => (
+                <Card key={post._id} className="mb-3" ref={filteredPosts.length === index + 1 ? lastPostRef : null}>
                   <Card.Body>
                     {editingPostId === post._id ? (
                       <Form onSubmit={handleEditPost}>
@@ -427,7 +453,7 @@ const Home: React.FC = () => {
               <Form.Label>Profile Image</Form.Label>
               <div className="d-flex align-items-center">
                 <Image
-                  src={profile.imageUrl || DEFAULT_PROFILE_IMAGE_URL}
+                  src={newImage ? URL.createObjectURL(newImage) : profile.imageUrl}
                   roundedCircle
                   width="50"
                   height="50"
