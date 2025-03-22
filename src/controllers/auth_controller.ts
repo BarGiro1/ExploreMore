@@ -47,7 +47,7 @@ const generateToken = (userId: string): tTokens | null => {
 };
 
 const login = async (req: Request, res: Response) => {
-    console.debug('login', req.body);
+    console.log('login', req.body);
     try {
         const user = await userModel.findOne({ username: req.body.username });
         if (!user) {
@@ -182,7 +182,6 @@ type Payload = {
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers['authorization']
-    console.log(req.headers)
     if (!token) {
         res.status(401).send('Access Denied');
         return;
