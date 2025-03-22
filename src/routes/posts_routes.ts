@@ -5,7 +5,7 @@ import postController from '../controllers/posts_controllers';
 import { authMiddleware } from '../controllers/auth_controller';
 
 
-router.get('/', postController.getAll.bind(postController));
+router.get('/', authMiddleware, postController.getAll.bind(postController));
 router.get('/:id', postController.getById.bind(postController));
 
 
