@@ -3,6 +3,7 @@ import apiClient from './api-client';
 export interface UserProfile {
   email: string;
   username: string;
+  imageUrl: string;
 }
 
 export const fetchUserProfile = async (accessToken: string): Promise<UserProfile> => {

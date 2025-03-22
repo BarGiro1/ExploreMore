@@ -3,8 +3,11 @@ import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
+
 
 const Register = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,6 +19,9 @@ const Register = () => {
       await register(email, username, password); // Call the register function from AuthContext
       console.log('Registration successful');
       toast.success('Registration successful!');
+      setTimeout(() => {
+        navigate("/auth/login");
+      }, 1000); 
     } catch (error) {
       console.error('Registration failed:', error);
       toast.error('Registration failed. Please try again.');
@@ -38,7 +44,7 @@ const Register = () => {
         <div className="text-center mb-3">
           <h4 className="fw-bold mb-1">Sign Up</h4>
           <small>
-            Already have an account? <a href="/login">Sign in</a>
+            Already have an account? <a href="/auth/login">Sign in</a>
           </small>
         </div>
 

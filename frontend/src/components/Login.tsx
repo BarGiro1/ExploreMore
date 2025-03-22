@@ -3,8 +3,11 @@ import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth(); // Get the login function from AuthContext
@@ -15,6 +18,9 @@ const Login = () => {
       await login(username, password); 
       console.log('Login successful');
       toast.success('Login successful!');
+      setTimeout(() => {
+        navigate("/");
+      }, 1000); 
     } catch (error) {
       console.error('Login failed:', error);
       toast.error('Login failed. Please check your credentials and try again.');
@@ -37,7 +43,7 @@ const Login = () => {
         <div className="text-center mb-3">
           <h4 className="fw-bold mb-1">Log in</h4>
           <small>
-            Don’t have an account? <a href="/register">Sign up</a>
+            Don’t have an account? <a href="/auth/register">Sign up</a>
           </small>
         </div>
 
