@@ -67,6 +67,41 @@ const router = express.Router();
  */
 router.post('/register', authControllers.register);
 
+
+
+/**
+ * @swagger
+ * /auth/google:
+ *   post:
+ *     summary: Authenticate user via Google Sign-In
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idToken:
+ *                 type: string
+ *                 description: Google ID token from client
+ *             example:
+ *               idToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Tokens'
+ *       400:
+ *         description: Invalid Google token
+ *       500:
+ *         description: Server error
+ */
+router.post('/google', authControllers.googleSignin);
+
+
 /**
  * @swagger
  * /auth/login:
