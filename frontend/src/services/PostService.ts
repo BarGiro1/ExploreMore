@@ -1,4 +1,5 @@
 import apiClient from './api-client';
+import { uploadPhoto } from './FileService';
 
 export interface Post {
   title: string;
@@ -18,8 +19,10 @@ export const fetchPosts = async (accessToken: string): Promise<Post[]> => {
   return response.data;
 };
 
-export const createPost = async (accessToken: string, data: Post): Promise<void> => {
-  await apiClient.post('/posts', data, {
+export const createPost = async (accessToken: string, data: Post, image: File | null): Promise<void> => {
+  const imageUrl = await uploadPhoto(image);
+  const updatedData = { ...data, imageUrl };
+  await apiClient.post('/posts', updatedData, {
     headers: {
       'authorization': `${accessToken}`,
       'Content-Type': 'application/json',

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchPosts, createPost, likePost, unlikePost, commentOnPost, deletePost, updatePost } from '../services/PostService';
 import { fetchUserProfile, updateUserProfile } from '../services/UserService';
-import { Card, Button, Form, Container, Row, Col, Alert, Nav, Navbar, Image } from 'react-bootstrap';
+import { Card, Button, Form, Container, Row, Col, Alert, Nav, Navbar, Image, Modal } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaTrash, FaEdit, FaThumbsUp, FaThumbsDown, FaComment, FaHome, FaUser, FaSignOutAlt, FaFilter } from 'react-icons/fa'; // Import icons
+import { FaTrash, FaEdit, FaThumbsUp, FaThumbsDown, FaComment, FaHome, FaUser, FaSignOutAlt, FaFilter, FaCamera } from 'react-icons/fa'; // Import icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,6 +13,7 @@ const DEFAULT_PROFILE_IMAGE_URL = 'http://localhost:3001/public/default_avatar.p
 interface Post {
   title: string;
   content: string;
+  imageUrl?: string;
 }
 
 const Home: React.FC = () => {
@@ -21,7 +22,8 @@ const Home: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [error, setError] = useState('');
+  const [image, setImage] = useState<File | null>(null);
+  const [error] = useState('');
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [editingContent, setEditingContent] = useState('');
@@ -38,7 +40,6 @@ const Home: React.FC = () => {
           const posts = await fetchPosts(accessToken);
           setPosts(posts);
         } catch (err) {
-          setError('Failed to fetch posts');
           toast.error('Failed to fetch posts');
         }
       }
@@ -54,7 +55,6 @@ const Home: React.FC = () => {
           setProfile(profile);
           setNewUsername(profile.username);
         } catch (err) {
-          setError('Failed to fetch profile');
           toast.error('Failed to fetch profile');
         }
       }
@@ -69,14 +69,14 @@ const Home: React.FC = () => {
     if (accessToken && content && title) {
       const newPost: Post = { title, content };
       try {
-        await createPost(accessToken, newPost);
+        await createPost(accessToken, newPost, image);
         const posts = await fetchPosts(accessToken);
         setPosts(posts);
         setTitle('');
         setContent('');
+        setImage(null);
         toast.success('Post created successfully!');
       } catch (err) {
-        setError('Failed to create post');
         toast.error('Failed to create post');
       }
     }
@@ -90,7 +90,6 @@ const Home: React.FC = () => {
         setPosts(posts);
         toast.success('Post liked!');
       } catch (err) {
-        setError('Failed to like post');
         toast.error('Failed to like post');
       }
     }
@@ -104,7 +103,6 @@ const Home: React.FC = () => {
         setPosts(posts);
         toast.success('Post unliked!');
       } catch (err) {
-        setError('Failed to unlike post');
         toast.error('Failed to unlike post');
       }
     }
@@ -118,7 +116,6 @@ const Home: React.FC = () => {
         setPosts(posts);
         toast.success('Post deleted successfully!');
       } catch (err) {
-        setError('Failed to delete post');
         toast.error('Failed to delete post');
       }
     }
@@ -128,7 +125,6 @@ const Home: React.FC = () => {
     if (accessToken) {
       try {
         if (!comment) {
-          setError('Comment cannot be empty');
           toast.error('Comment cannot be empty');
           return;
         }
@@ -137,7 +133,6 @@ const Home: React.FC = () => {
         setPosts(posts);
         toast.success('Comment added!');
       } catch (err) {
-        setError('Failed to comment on post');
         toast.error('Failed to comment on post');
       }
     }
@@ -156,7 +151,6 @@ const Home: React.FC = () => {
         setEditingContent('');
         toast.success('Post updated successfully!');
       } catch (err) {
-        setError('Failed to update post');
         toast.error('Failed to update post');
       }
     }
@@ -185,7 +179,6 @@ const Home: React.FC = () => {
         setProfileEditing(false);
         toast.success('Profile updated successfully!');
       } catch (err) {
-        setError('Failed to update profile');
         toast.error('Failed to update profile');
       }
     }
@@ -197,7 +190,6 @@ const Home: React.FC = () => {
       navigate('/auth/login');
       toast.success('Logged out successfully!');
     } catch (err) {
-      setError('Failed to logout');
       toast.error('Failed to logout');
     }
   };
@@ -210,7 +202,7 @@ const Home: React.FC = () => {
     <div className="d-flex">
       <Navbar bg="light" className="flex-column vh-100 p-3 position-fixed" style={{ width: '200px' }}>
         <div className="text-center mb-4">
-          <Image src={profile.imageUrl || 'https://via.placeholder.com/100'} roundedCircle width="100" height="100" />
+          <Image src={profile.imageUrl || DEFAULT_PROFILE_IMAGE_URL} roundedCircle width="100" height="100" />
         </div>
         <Nav className="flex-column w-100">
           <Nav.Link as={Link} to="/" className="d-flex align-items-center mb-2">
@@ -231,7 +223,8 @@ const Home: React.FC = () => {
           <ToastContainer />
           <Row className="justify-content-md-center">
             <Col md={8}>
-              <h2 className="text-center"><hr></hr></h2>
+              <br></br><br></br>
+              <h2 className="text-center"> </h2>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleCreatePost}>
                 <Form.Group className="mb-3" controlId="formTitle">
@@ -250,6 +243,13 @@ const Home: React.FC = () => {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="What's on your mind?"
+                    className="rounded-pill px-3 py-2"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formImage">
+                  <Form.Control
+                    type="file"
+                    onChange={(e) => setImage((e.target as HTMLInputElement).files ? (e.target as HTMLInputElement).files![0] : null)}
                     className="rounded-pill px-3 py-2"
                   />
                 </Form.Group>
@@ -319,7 +319,15 @@ const Home: React.FC = () => {
                         </Card.Subtitle>
                         <Card.Title>{post.title}</Card.Title>
                         <Card.Text>{post.content}</Card.Text>
-                        {post.imageUrl && <Card.Img variant="top" src={post.imageUrl} />}
+                        {post.imageUrl && (
+                          <div style={{ display: 'flex', justifyContent: 'left', marginBottom: '10px' }}>
+                            <Card.Img 
+                              variant="top" 
+                              src={post.imageUrl} 
+                              style={{ width: '50px', height: 'auto', borderRadius: '8px' }} 
+                            />
+                          </div>
+                        )}                     
                         <Form
                           onSubmit={(e) => {
                             e.preventDefault();
@@ -381,7 +389,7 @@ const Home: React.FC = () => {
                         size="sm"
                         className="rounded-pill px-3 py-2"
                       >
-                        <FaEdit /> Edit
+                        <FaEdit />
                       </Button>
                       <Button
                         variant="outline-danger"
@@ -389,7 +397,7 @@ const Home: React.FC = () => {
                         size="sm"
                         className="ml-2 rounded-pill px-3 py-2"
                       >
-                        <FaTrash /> Delete
+                        <FaTrash />
                       </Button>
                     </div>
                   )}
@@ -399,48 +407,57 @@ const Home: React.FC = () => {
           </Row>
         </Container>
       </div>
-      {profileEditing && (
-        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="bg-white p-4 rounded">
-            <h4>Edit Profile</h4>
-            <Form onSubmit={handleUpdateProfile}>
-              <Form.Group className="mb-3" controlId="formProfileUsername">
-                <Form.Label>Username</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={newUsername}
-                  onChange={(e) => setNewUsername(e.target.value)}
-                  placeholder="Enter new username"
-                  className="rounded-pill px-3 py-2"
+      <Modal show={profileEditing} onHide={() => setProfileEditing(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Profile</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleUpdateProfile}>
+            <Form.Group className="mb-3" controlId="formProfileUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                placeholder="Enter new username"
+                className="rounded-pill px-3 py-2"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formProfileImage">
+              <Form.Label>Profile Image</Form.Label>
+              <div className="d-flex align-items-center">
+                <Image
+                  src={profile.imageUrl || DEFAULT_PROFILE_IMAGE_URL}
+                  roundedCircle
+                  width="50"
+                  height="50"
+                  className="me-3"
                 />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formProfileImage">
-                <Form.Label>Profile Image</Form.Label>
                 <Form.Control
                   type="file"
                   onChange={(e) => setNewImage((e.target as HTMLInputElement).files ? (e.target as HTMLInputElement).files![0] : null)}
                   className="rounded-pill px-3 py-2"
                 />
-              </Form.Group>
-              <Button
-                variant="primary"
-                type="submit"
-                className="btn w-100 rounded-pill py-2 mb-2"
-                style={{ backgroundColor: '#9933ff', color: 'white', fontWeight: 'bold' }}
-              >
-                Update Profile
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setProfileEditing(false)}
-                className="btn w-100 rounded-pill py-2"
-              >
-                Cancel
-              </Button>
-            </Form>
-          </div>
-        </div>
-      )}
+              </div>
+            </Form.Group>
+            <Button
+              variant="primary"
+              type="submit"
+              className="btn w-100 rounded-pill py-2 mb-2"
+              style={{ backgroundColor: '#9933ff', color: 'white', fontWeight: 'bold' }}
+            >
+              Update Profile
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setProfileEditing(false)}
+              className="btn w-100 rounded-pill py-2"
+            >
+              Cancel
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
