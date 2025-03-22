@@ -66,7 +66,7 @@ class PostController extends BaseController<IPost>{
                     },
                 ]);
             }
-            console.log(posts);
+console.log(posts);
             res.send(posts);
 
         }

@@ -27,31 +27,32 @@ class BaseController<T>{
         }
      };
      
-async create(req:Request , res: Response)  {
-    const itemBody = req.body;
-    try {
-      
-        const item = await this.model.create(itemBody);
-        res.status(201).json(item);
-    } catch (error) {
-        res.status(400).json({ error});
-    }
- };
-    
-async getById (req:Request , res: Response)  {
-    const itemId = req.params.id;
-    try{
-        const item =await this.model.findById(itemId);
-        if (item) {
-            res.send(item);
+    async create(req:Request , res: Response)  {
+        const itemBody = req.body;
+        try {
+        
+            const item = await this.model.create(itemBody);
+            res.status(201).json(item);
+        } catch (error) {
+            res.status(400).json({ error});
         }
-        else {
-            res.status(404).send('Post not found');
-        }
-    }catch(error) {
-            res.status(400).send(error);
-        }
+    };
+        
+    async getById (req:Request , res: Response)  {
+        const itemId = req.params.id;
+        try{
+            const item =await this.model.findById(itemId);
+            if (item) {
+                res.send(item);
+            }
+            else {
+                res.status(404).send('Post not found');
+            }
+        }catch(error) {
+                res.status(400).send(error);
+            }
     }; 
+    
     async delete_(req: Request, res: Response) {
         const itemId = req.params.id;
         if (!itemId) {
