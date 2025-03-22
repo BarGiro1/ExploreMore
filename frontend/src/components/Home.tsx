@@ -8,6 +8,8 @@ import { FaTrash, FaEdit, FaThumbsUp, FaThumbsDown, FaComment, FaHome, FaUser, F
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const DEFAULT_PROFILE_IMAGE_URL = 'http://localhost:3001/public/default_avatar.png';
+
 interface Post {
   title: string;
   content: string;
@@ -23,7 +25,7 @@ const Home: React.FC = () => {
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [editingContent, setEditingContent] = useState('');
-  const [profile, setProfile] = useState({ email: '', username: '', imageUrl: '' });
+  const [profile, setProfile] = useState({ email: '', username: '', imageUrl: ''});
   const [profileEditing, setProfileEditing] = useState(false);
   const [newUsername, setNewUsername] = useState('');
   const [newImage, setNewImage] = useState<File | null>(null);
@@ -46,6 +48,9 @@ const Home: React.FC = () => {
       if (accessToken) {
         try {
           const profile = await fetchUserProfile(accessToken);
+          if (!profile.imageUrl) {
+            profile.imageUrl = DEFAULT_PROFILE_IMAGE_URL;
+          }
           setProfile(profile);
           setNewUsername(profile.username);
         } catch (err) {
@@ -174,17 +179,7 @@ const Home: React.FC = () => {
     if (accessToken && newUsername) {
       const updatedProfile = { email: profile.email, username: newUsername };
       try {
-        await updateUserProfile(accessToken, updatedProfile);
-        // Handle image upload separately
-        // if (newImage) {
-        //   const formData = new FormData();
-        //   formData.append('image', newImage);
-        //   await apiClient.put('/users/image', formData, {
-        //     headers: {
-        //       'authorization': `${accessToken}`,
-        //     },
-        //   });
-        // }
+        await updateUserProfile(accessToken, updatedProfile, newImage);
         const profile = await fetchUserProfile(accessToken);
         setProfile(profile);
         setProfileEditing(false);

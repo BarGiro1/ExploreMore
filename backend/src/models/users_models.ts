@@ -29,8 +29,7 @@ const userSchema = new Schema<IUser>(
     },
     imageUrl: {
       type: String,
-      required: false,
-      default: process.env.DOMAIN_BASE_URL + "public/avatar.png",
+      default: "",
     },
     refreshToken: {
       type: [String],  // מערך של מחרוזות

@@ -54,7 +54,8 @@ const register = async (req: Request, res: Response) => {
         const user = await userModel.create({
             email: req.body.email,
             password: hashedPassword,
-            username: req.body.username
+            username: req.body.username,
+            imageUrl: req.body.imageUrl
         });
         res.status(200).send(user);
     } catch (err) {

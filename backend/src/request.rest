@@ -69,7 +69,7 @@ Content-Type: application/json
 
 
 ###
-Get http://localhost:3001/comments
+Get http://localhost:3001/users
 content-type: application/json
 
 

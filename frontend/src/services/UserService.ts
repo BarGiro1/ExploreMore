@@ -1,4 +1,5 @@
 import apiClient from './api-client';
+import { uploadPhoto } from './FileService';
 
 export interface UserProfile {
   email: string;
@@ -15,8 +16,10 @@ export const fetchUserProfile = async (accessToken: string): Promise<UserProfile
   return response.data;
 };
 
-export const updateUserProfile = async (accessToken: string, data: { email: string; username: string }): Promise<void> => {
-  await apiClient.put('/users', data, {
+export const updateUserProfile = async (accessToken: string, data: { email: string; username: string }, photo: File | null): Promise<void> => {
+  const imageUrl = await uploadPhoto(photo);
+  const updatedData = { ...data, imageUrl };
+  await apiClient.put('/users', updatedData, {
     headers: {
       'authorization': `${accessToken}`,
     },

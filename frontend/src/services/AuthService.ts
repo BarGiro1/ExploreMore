@@ -1,4 +1,5 @@
 import apiClient from './api-client';
+import { uploadPhoto } from './FileService';
 import { CredentialResponse } from '@react-oauth/google';
 
 export interface AuthResponse {
@@ -11,8 +12,9 @@ export const login = async (username: string, password: string): Promise<AuthRes
   return response.data;
 };
 
-export const register = async (email: string, username: string, password: string): Promise<void> => {
-  await apiClient.post('/auth/register', { email, username, password });
+export const register = async (email: string, username: string, password: string, profilePhoto: File | null): Promise<void> => {
+  const imageUrl = await uploadPhoto(profilePhoto);
+  await apiClient.post('/auth/register', { email, username, password, imageUrl});
 };
 
 export const logout = async (refreshToken: string): Promise<void> => {

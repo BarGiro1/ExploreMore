@@ -13,7 +13,7 @@ interface AuthContextType {
   refreshToken: string | null;
   googleLogin: (credential: CredentialResponse) => Promise<void>;
   login: (email: string, username: string) => Promise<void>;
-  register: (email: string, username: string, password: string) => Promise<void>;
+  register: (email: string, username: string, password: string, profilePhoto: File | null) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -31,8 +31,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem('refreshToken', refreshToken);
   };
 
-  const register = async (email: string, username: string, password: string) => {
-    await registerService(email, username, password);
+  const register = async (email: string, username: string, password: string, profilePhoto: File | null) => {
+    await registerService(email, username, password, profilePhoto);
   };
 
   const googleLogin = async (credential: CredentialResponse) => {

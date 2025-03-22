@@ -10,13 +10,15 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
+  const [profilePhotoURL, setProfilePhotoURL] = useState<string | null>(null);
   const { register } = useAuth(); // Get the register function from AuthContext
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register(email, username, password); // Call the register function from AuthContext
+      await register(email, username, password, profilePhoto); // Call the register function from AuthContext
       console.log('Registration successful');
       toast.success('Registration successful!');
       setTimeout(() => {
@@ -25,6 +27,14 @@ const Register = () => {
     } catch (error) {
       console.error('Registration failed:', error);
       toast.error('Registration failed. Please try again.');
+    }
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setProfilePhoto(file);
+      setProfilePhotoURL(URL.createObjectURL(file));
     }
   };
 
@@ -92,6 +102,25 @@ const Register = () => {
               required
             />
           </div>
+          <div className="mb-3">
+            <label className="form-label small">Profile Photo</label>
+            <input
+              type="file"
+              className="form-control rounded-pill px-3 py-2"
+              onChange={handlePhotoChange}
+              accept="image/*"
+            />
+          </div>
+          {profilePhotoURL && (
+            <div className="mb-3 text-center">
+              <img
+                src={profilePhotoURL}
+                alt="Profile Preview"
+                className="img-fluid rounded-circle"
+                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+              />
+            </div>
+          )}
           <button
             type="submit"
             className="btn w-100 rounded-pill py-2"
