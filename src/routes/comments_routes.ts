@@ -4,13 +4,7 @@ const router = express.Router();
 
 router.get('/', commentsController.getAll.bind(commentsController));
 router.post('/', commentsController.create.bind(commentsController));
-router.delete("/:id",(req,res)=>{
-    commentsController.delete_(req,res);
-}
-);
-router.put("/:id",(req,res)=>{
-    commentsController.update(req,res);
-}
-);
+router.delete("/:id",commentsController.delete_.bind(commentsController));
+router.get("/:id",commentsController.getById.bind(commentsController));
 
 export default router;
