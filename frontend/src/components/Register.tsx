@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +11,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { register } = useAuth(); // Get the register function from AuthContext
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,13 +46,6 @@ const Register = () => {
           <small>
             Already have an account? <a href="/auth/login">Sign in</a>
           </small>
-        </div>
-
-        <div className="d-grid gap-2 mb-3">
-          <button className="btn btn-light border rounded-pill d-flex align-items-center justify-content-center gap-2">
-            <FcGoogle />
-            Sign up with Google
-          </button>
         </div>
 
         <div className="text-center text-muted mb-3 position-relative">

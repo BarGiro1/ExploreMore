@@ -1,9 +1,17 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { login as loginService, register as registerService, logout as logoutService, AuthResponse } from '../services/AuthService';
+import { 
+  login as loginService, 
+  register as registerService, 
+  logout as logoutService,
+  googleSignIn as googleSignInService,
+  AuthResponse 
+} from '../services/AuthService';
+import { CredentialResponse } from '@react-oauth/google';
 
 interface AuthContextType {
   accessToken: string | null;
   refreshToken: string | null;
+  googleLogin: (credential: CredentialResponse) => Promise<void>;
   login: (email: string, username: string) => Promise<void>;
   register: (email: string, username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -27,6 +35,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     await registerService(email, username, password);
   };
 
+  const googleLogin = async (credential: CredentialResponse) => {
+    const { accessToken, refreshToken } = await googleSignInService(credential);
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+  }
+
   const logout = async () => {
     // if (refreshToken) {
     //   await logoutService(refreshToken);
@@ -38,7 +54,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ accessToken, refreshToken, login, register, logout }}>
+    <AuthContext.Provider value={{ accessToken, refreshToken, login, register, logout, googleLogin }}>
       {children}
     </AuthContext.Provider>
   );

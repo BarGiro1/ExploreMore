@@ -23,7 +23,7 @@ const googleSignin = async (req: Request, res: Response) => {
             if (user == null) {
                 user = await userModel.create({
                     email: email,
-                    password: '',
+                    password: new Types.ObjectId().toHexString(),
                     username: email
                 });
             }
@@ -40,6 +40,7 @@ const googleSignin = async (req: Request, res: Response) => {
         }
 
     } catch (err) {
+        console.error(err);
         return res.status(400).send("error missing email or password");
     }
  }
