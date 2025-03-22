@@ -1,3 +1,5 @@
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from 'swagger-jsdoc';
 import dotenv from 'dotenv';
 dotenv.config();
 import mongoose from 'mongoose';
@@ -26,6 +28,26 @@ app.use('/comments', commentsRoutes);
 app.use('/users', usersRoutes);
 app.use('/likes', likesRoutes);
 
+if (process.env.NODE_ENV === 'development') {
+  const options = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Blog API',
+        version: '1.0.0',
+        description: 'A simple Express Library API',
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000',
+        },
+      ],
+    },
+    apis: ['./src/routes/*.ts'],
+  };
+  const specs = swaggerDocument(options);
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+}
 const initApp = () => {
   return new Promise<Express>((resolve, reject) => {
     const db = mongoose.connection;
