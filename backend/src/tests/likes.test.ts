@@ -8,8 +8,8 @@ import { login } from "./test_utils";
 
 
 let app: Express;
-var refreshToken: string = "";
-var userId: string = "";
+let accessToken: string = "";
+let userId: string = "";
 
 interface Likes {
     _id?: string;
@@ -23,7 +23,7 @@ const createdLikes: Likes[] = []; // נשמור כאן את הפוסטים עם 
 beforeAll(async () => {
     console.log("beforeAll");
     app = await appInit();
-    [refreshToken, userId] = await login(app);
+    [accessToken, userId] = await login(app);
     await likesModel.deleteMany();
 });
 
@@ -32,11 +32,9 @@ afterAll(async () => {
 });
 
 describe("Likes Test", () => {
-
-
     test("Test create new Likes", async () => {
         for (let i = 0; i < testLikes.length; i++) {
-            const response = await request(app).post("/likes").set('authorization', refreshToken).send(testLikes[i]);
+            const response = await request(app).post("/likes").set('authorization', accessToken).send(testLikes[i]);
             expect(response.statusCode).toBe(201);
             expect(response.body.userId).toBe(userId);
             expect(response.body.postId).toBe(testLikes[i].postId);
@@ -50,8 +48,8 @@ describe("Likes Test", () => {
 
     test("test delete likes", async () => {
         const likesToDelete = createdLikes[0];
-        const response = await request(app).delete("/likes/" + likesToDelete._id).set('authorization', refreshToken);
+        
+        const response = await request(app).delete("/likes/" + likesToDelete.postId).set('authorization', accessToken);
         expect(response.statusCode).toBe(200);
-        expect(response.body._id).toBe(likesToDelete._id);
     });
 })

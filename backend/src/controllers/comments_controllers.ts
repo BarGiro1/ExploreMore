@@ -27,15 +27,39 @@ class CommentController extends BaseController<IComments>{
     async delete_(req: Request, res: Response) {
         console.log('Delete comment', req.body);
         const userId = req.params.userId;
-        const comment = await commentsModel.findByIdAndDelete(req.params.id);
+        const commentId = req.params.id;
 
+
+        const comment = await commentsModel.findById(commentId);
         if (!comment) {
             return res.status(404).send('Comment not found');
         }
-        // decrease the number of comments in the post
-        await PostModel.findByIdAndUpdate(comment.postId, { $inc: { numOfComments: -1 } });
+        
+        if (comment.userId.toString() !== userId) {
+            return res.status(403).send('You can only delete your own comments');
+        }
 
-        return super.delete_(req, res);
+        await commentsModel.findByIdAndDelete(commentId);
+        await PostModel.findByIdAndUpdate(comment.postId, { $inc: { numOfComments: -1 } });
+        return res.status(200).send(comment);
+    }
+
+    async update(req: Request, res: Response) {
+        console.log('Update comment', req.body);
+        const userId = req.params.userId;
+        const commentId = req.params.id;
+
+        const comment = await commentsModel.findById(commentId);
+        if (!comment) {
+            return res.status(404).send('Comment not found');
+        }
+
+        if (comment.userId.toString() !== userId) {
+            return res.status(403).send('You can only update your own comments');
+        }
+
+        await commentsModel.findByIdAndUpdate(commentId, { content: req.body.content });
+        return res.status(200).send(await commentsModel.findById(commentId));
     }
 
     async getAll(req:Request , res: Response) {

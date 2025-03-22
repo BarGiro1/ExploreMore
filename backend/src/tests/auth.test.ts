@@ -97,3 +97,6 @@ describe("Auth Test", () => {
     }
     );
 });
+
+
+export { testuser };

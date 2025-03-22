@@ -33,7 +33,7 @@ import { Request, Response } from 'express';
  }
  
  const deleteLike = async (req:Request , res: Response) => {
-     const postId = req.params.id;
+     const postId = req.params.postId;
      try {
         // decrement like count in post
          await PostsModel.findOneAndUpdate({ _id: postId }, { $inc: { numOfLikes: -1 } });

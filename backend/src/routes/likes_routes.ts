@@ -56,9 +56,9 @@ router.post('/', authMiddleware, likesController.createLike);
 
 /**
  * @swagger
- * /likes/{id}:
+ * /likes/{postId}:
  *   delete:
- *     summary: Remove a like by ID
+ *     summary: Remove a like by Post ID
  *     tags: [Likes]
  *     security:
  *       - bearerAuth: []
@@ -68,11 +68,11 @@ router.post('/', authMiddleware, likesController.createLike);
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the like to delete
+ *         description: The post ID of the like to remove (of the logged in user)
  *     responses:
  *       200:
  *         description: Like removed successfully
  */
-router.delete('/:id', authMiddleware, likesController.deleteLike);
+router.delete('/:postId', authMiddleware, likesController.deleteLike);
 
 export default router;

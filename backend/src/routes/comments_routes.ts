@@ -80,7 +80,7 @@ router.post('/', authMiddleware, commentsController.create.bind(commentsControll
  * @swagger
  * /comments/{id}:
  *   delete:
- *     summary: Delete a comment by ID
+ *     summary: Delete a comment from a post
  *     tags: [Comments]
  *     parameters:
  *       - in: path
@@ -88,7 +88,7 @@ router.post('/', authMiddleware, commentsController.create.bind(commentsControll
  *         schema:
  *           type: string
  *         required: true
- *         description: The comment ID
+ *         description: The ID of comment to delete
  *     responses:
  *       200:
  *         description: Comment deleted successfully
@@ -116,6 +116,36 @@ router.delete("/:id", authMiddleware, commentsController.delete_.bind(commentsCo
  *             schema:
  *               $ref: '#/components/schemas/Comment'
  */
-router.get("/:id", authMiddleware, commentsController.getById.bind(commentsController));
+router.get("/:id", commentsController.getById.bind(commentsController));
+
+
+/**
+ * @swagger
+ * /comments/{id}:
+ *   put:
+ *     summary: Update a comment
+ *     tags: [Comments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of comment to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Comment'
+ *     responses:
+ *       200:
+ *         description: Comment updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Comment'
+ */
+router.put("/:id", authMiddleware, commentsController.update.bind(commentsController));
 
 export default router;

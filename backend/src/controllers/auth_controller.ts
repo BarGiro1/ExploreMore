@@ -113,6 +113,7 @@ const login = async (req: Request, res: Response) => {
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
         console.debug('login success', tokens);
+        console.log('Logged in', user);
         res.status(200).send(
             {
                 accessToken: tokens.accessToken,
