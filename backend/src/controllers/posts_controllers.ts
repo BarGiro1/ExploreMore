@@ -4,6 +4,9 @@ import BaseController from './base_controller';
 import { Types } from 'mongoose';
 import PostModel from '../models/posts_models';
 
+
+const PAGE_SIZE = 10;
+
 class PostController extends BaseController<IPost>{
     constructor(){
         super(postModel);
@@ -22,11 +25,14 @@ class PostController extends BaseController<IPost>{
 
     async getAll(req:Request , res: Response) {
         const ownerFilter = req.query.owner;
-        const createdAtFilter = req.query.createdAt;
+        
+        const page = parseInt(req.query.page as string) || 1;
+
+
         var posts;
         try {
             if (ownerFilter) {
-                posts = await postModel.find({ owner: ownerFilter });
+                posts = await postModel.find({ owner: ownerFilter }).skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
             }
             else {
                 posts = await PostModel.aggregate([
@@ -64,7 +70,7 @@ class PostController extends BaseController<IPost>{
                         likes: 0, // Exclude likes array if not needed
                     },
                     },
-                ]);
+                ]).skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
             }
 console.log(posts);
             res.send(posts);

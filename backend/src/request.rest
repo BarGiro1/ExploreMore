@@ -1,6 +1,6 @@
 ###
 Get http://localhost:3001/posts
-authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlMDFjMmZhODc2MDc4NjVmYjQzNDkiLCJpYXQiOjE3NDI2MDM0NTIsImV4cCI6MTc0Mjg2MjY1Mn0.eEfsRq-LQ2Kx7oPGBI9RsytEvWihNtMVbsxTXxZNb30
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2RlOTE4YjdmNDk4MTU2NTg5MGMyMDkiLCJpYXQiOjE3NDI2NDYzNDksImV4cCI6MTc0MjkwNTU0OX0.gWYGBnHXwKduM0APsBvz_jd2vxJUN0wxgh9sPc8S30U
 ###
 
 POST http://localhost:3000/posts
@@ -26,7 +26,7 @@ Content-Type: application/json
 {
     "username": "admin",
     "email": "admin@a.com",
-    "password": "123456"
+    "password": "admin"
 } 
 
 
@@ -36,7 +36,7 @@ Content-Type: application/json
 
 {
     "username": "admin",
-    "password": "admin"
+    "password": "123456"
 }
 
 
