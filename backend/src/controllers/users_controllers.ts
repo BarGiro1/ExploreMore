@@ -50,6 +50,7 @@ const getUserById = async(req:Request , res: Response) => {
 const updateUsers = async (req:Request , res: Response) => {
     const userId = req.params.userId;
     const userBody = req.body;
+    console.log('Update user', userBody);
     try {
         const user = await usersModel.findByIdAndUpdate
         (userId, userBody, { new: true });

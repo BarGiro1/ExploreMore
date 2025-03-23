@@ -55,7 +55,7 @@ const Comments: React.FC = () => {
 
   const handleEditComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (accessToken && editingContent && editingCommentId) {
+    if (accessToken && editingCommentId) {
       try {
         await updateComment(accessToken, editingCommentId, editingContent);
         const comments = await fetchComments(accessToken, postId!);

@@ -70,7 +70,7 @@ const Home: React.FC = () => {
 
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (accessToken && content && title) {
+    if (accessToken && title) {
       const newPost: Post = { title, content };
       try {
         await createPost(accessToken, newPost, image);
@@ -149,7 +149,7 @@ const Home: React.FC = () => {
 
   const handleEditPost = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (accessToken && editingTitle && editingPostId) {
+    if (accessToken && editingTitle  && editingPostId) {
       const updatedPost: Post = { title: editingTitle, content: editingContent };
       try {
         await updatePost(accessToken, editingPostId, updatedPost);

@@ -98,8 +98,4 @@ describe("Posts Test", () => {
         expect(response2.statusCode).toBe(404);
     });
 
-    test("Test Create Post Fail", async () => {
-        const response = await request(app).post("/posts").send({ title: "title" }).set({ authorization: accessToken });
-        expect(response.statusCode).toBe(400);
-    });
 });
