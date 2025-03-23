@@ -68,6 +68,22 @@ const Home: React.FC = () => {
     getPosts(page);
   }, [accessToken, page]);
 
+  useEffect(() => {
+    const getProfile = async () => {
+      if (accessToken) {
+        try {
+          const userProfile = await fetchUserProfile(accessToken);
+          setProfile(userProfile);
+          setNewUsername(userProfile.username);
+        } catch (err) {
+          toast.error('Failed to fetch user profile');
+        }
+      }
+    };
+
+    getProfile();
+  });
+
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
     if (accessToken && title) {

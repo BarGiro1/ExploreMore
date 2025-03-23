@@ -5,6 +5,7 @@ import { fetchComments, deleteComment, updateComment, Comment } from '../service
 import { fetchPost, Post } from '../services/PostService';
 import { Card, Button, Form, Container, Row, Col, Alert, Nav, Navbar, Image } from 'react-bootstrap';
 import { FaTrash, FaEdit, FaHome, FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { fetchUserProfile } from '../services/UserService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Profile from './Profile';
@@ -39,6 +40,8 @@ const Comments: React.FC = () => {
     getPostAndComments();
   }, [accessToken, postId]);
 
+
+    
   const handleDeleteComment = async (commentId: string) => {
     if (accessToken) {
       try {
@@ -83,14 +86,10 @@ const Comments: React.FC = () => {
   return (
     <div className="d-flex">
       <Navbar bg="light" className="flex-column vh-100 p-3 position-fixed" style={{ width: '200px' }}>
-        <div className="text-center mb-4">
-          <Image src={DEFAULT_PROFILE_IMAGE_URL} roundedCircle width="100" height="100" />
-        </div>
         <Nav className="flex-column w-100">
           <Nav.Link as={Link} to="/" className="d-flex align-items-center mb-2">
             <FaHome className="me-2" /> Home
           </Nav.Link>
-          <Profile />
         </Nav>
         <Nav className="flex-column w-100 mt-auto">
           <Logout />
