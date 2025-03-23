@@ -49,8 +49,8 @@ const Profile: React.FC = () => {
   return (
     <>
       <ToastContainer />
-      <Button onClick={() => setProfileEditing(true)} className="d-flex align-items-center mb-2">
-        <FaUser className="me-2" /> Profile
+      <Button onClick={() => setProfileEditing(true)} className="d-flex align-items-center mb-2" style={{ backgroundColor: 'transparent', border: 'none', color: 'inherit' }}>
+      <FaUser className="me-2" /> Profile
       </Button>
       <Modal show={profileEditing} onHide={() => setProfileEditing(false)} centered>
         <Modal.Header closeButton>

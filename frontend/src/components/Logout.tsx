@@ -23,7 +23,7 @@ const Logout: React.FC = () => {
   return (
     <>
       <ToastContainer />
-      <Button onClick={handleLogout} className="d-flex align-items-center">
+      <Button onClick={handleLogout} className="d-flex align-items-center mb-2" style={{ backgroundColor: 'transparent', border: 'none', color: 'inherit' }}>
         <FaSignOutAlt className="me-2" /> Logout
       </Button>
     </>
