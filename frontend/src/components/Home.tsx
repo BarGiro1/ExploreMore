@@ -4,9 +4,11 @@ import { fetchPosts, createPost, likePost, unlikePost, commentOnPost, deletePost
 import { fetchUserProfile, updateUserProfile } from '../services/UserService';
 import { Card, Button, Form, Container, Row, Col, Alert, Nav, Navbar, Image, Modal } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaTrash, FaEdit, FaThumbsUp, FaThumbsDown, FaComment, FaHome, FaUser, FaSignOutAlt, FaFilter, FaCamera } from 'react-icons/fa'; // Import icons
+import { FaTrash, FaEdit, FaThumbsUp, FaThumbsDown, FaComment, FaHome, FaFilter } from 'react-icons/fa'; // Import icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Profile from './Profile';
+import Logout from './Logout';
 
 const DEFAULT_PROFILE_IMAGE_URL = 'http://localhost:3001/public/default_avatar.png';
 
@@ -18,7 +20,7 @@ interface Post {
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { accessToken, logout } = useAuth();
+  const { accessToken } = useAuth();
   const [posts, setPosts] = useState<any[]>([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -51,35 +53,20 @@ const Home: React.FC = () => {
       if (accessToken) {
         try {
           const newPosts = await fetchPosts(accessToken, page);
-          setPosts(prevPosts => [...prevPosts, ...newPosts]);
+          setPosts(prevPosts => {
+            // Filter out duplicates
+            const uniquePosts = newPosts.filter(newPost => !prevPosts.some(post => post._id === newPost._id));
+            return [...prevPosts, ...uniquePosts];
+          });
           setHasMore(newPosts.length > 0);
         } catch (err) {
           toast.error('Failed to fetch posts');
         }
       }
     };
-
+  
     getPosts(page);
   }, [accessToken, page]);
-
-  useEffect(() => {
-    const getProfile = async () => {
-      if (accessToken) {
-        try {
-          const profile = await fetchUserProfile(accessToken);
-          if (!profile.imageUrl) {
-            profile.imageUrl = DEFAULT_PROFILE_IMAGE_URL;
-          }
-          setProfile(profile);
-          setNewUsername(profile.username);
-        } catch (err) {
-          toast.error('Failed to fetch profile');
-        }
-      }
-    };
-
-    getProfile();
-  }, [accessToken]);
 
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,10 +74,8 @@ const Home: React.FC = () => {
       const newPost: Post = { title, content };
       try {
         await createPost(accessToken, newPost, image);
-        setPage(1);
-        setPosts([]);
         const posts = await fetchPosts(accessToken, 1);
-        setPosts(posts);
+        setPosts(posts); // Replace the posts state with the new list
         setTitle('');
         setContent('');
         setImage(null);
@@ -168,10 +153,8 @@ const Home: React.FC = () => {
       const updatedPost: Post = { title: editingTitle, content: editingContent };
       try {
         await updatePost(accessToken, editingPostId, updatedPost);
-        setPage(1);
-        setPosts([]);
         const posts = await fetchPosts(accessToken, 1);
-        setPosts(posts);
+        setPosts(posts); // Replace the posts state with the new list
         setEditingPostId(null);
         setEditingTitle('');
         setEditingContent('');
@@ -210,16 +193,6 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/auth/login');
-      toast.success('Logged out successfully!');
-    } catch (err) {
-      toast.error('Failed to logout');
-    }
-  };
-
   const filteredPosts = showUserPosts
     ? posts.filter((post) => post.isCreatedByCurrentUser)
     : posts;
@@ -231,17 +204,13 @@ const Home: React.FC = () => {
           <Image src={profile.imageUrl || DEFAULT_PROFILE_IMAGE_URL} roundedCircle width="100" height="100" />
         </div>
         <Nav className="flex-column w-100">
-          <Nav.Link as={Link} to="/" className="d-flex align-items-center mb-2">
-            <FaHome className="me-2" /> Home
-          </Nav.Link>
-          <Nav.Link onClick={() => setProfileEditing(true)} className="d-flex align-items-center mb-2">
-            <FaUser className="me-2" /> Profile
-          </Nav.Link>
+        <Nav.Link as={Link} to="/" className="d-flex align-items-center mb-2 nav-link">
+          <FaHome className="me-2" /> Home
+        </Nav.Link>
+          <Profile />
         </Nav>
-        <Nav className="flex-column w-100 mt-auto">
-          <Nav.Link onClick={handleLogout} className="d-flex align-items-center">
-            <FaSignOutAlt className="me-2" /> Logout
-          </Nav.Link>
+        <Nav className="flex-column w-100 mt-auto" style={{backgroundColor: "transparent"}}>
+          <Logout />
         </Nav>
       </Navbar>
       <div className="flex-grow-1 vh-100 overflow-auto" style={{ marginLeft: '200px', backgroundColor: '#f2f2f2' }}>

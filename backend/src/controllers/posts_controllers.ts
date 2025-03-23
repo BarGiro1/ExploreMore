@@ -70,7 +70,7 @@ class PostController extends BaseController<IPost>{
                         likes: 0, // Exclude likes array if not needed
                     },
                     },
-                ]).skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
+                ]).sort({ createdAt: -1 }).skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
             }
             res.send(posts);
 

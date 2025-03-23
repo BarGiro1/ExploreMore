@@ -2,6 +2,8 @@ import apiClient from './api-client';
 import { uploadPhoto } from './FileService';
 
 export interface Post {
+  _id?: string;
+  imageUrl?: string;
   title: string;
   content: string;
 }
@@ -12,6 +14,15 @@ export interface LikeResponse {
 
 export const fetchPosts = async (accessToken: string, page: Number = 1): Promise<Post[]> => {
   const response = await apiClient.get<Post[]>(`/posts?page=${page}`, {
+    headers: {
+      'authorization': `${accessToken}`,
+    },
+  });
+  return response.data;
+};
+
+export const fetchPost = async (accessToken: string, postId: string): Promise<Post> => {
+  const response = await apiClient.get<Post>(`/posts/${postId}`, {
     headers: {
       'authorization': `${accessToken}`,
     },

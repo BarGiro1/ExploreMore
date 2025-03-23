@@ -9,7 +9,6 @@ const UserRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-      {/* <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> */}
       <Route path="/posts/:postId/comments" element={<ProtectedRoute><Comments /></ProtectedRoute>} />
     </Routes>
   );
