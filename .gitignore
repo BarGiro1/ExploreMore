@@ -28,4 +28,4 @@ dist-ssr
 backend/.env.prod
 backend/.env
 frontend/.env*
-
+*.zip
