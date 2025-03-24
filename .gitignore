@@ -29,3 +29,5 @@ backend/.env.prod
 backend/.env
 frontend/.env*
 *.zip
+.env
+.env_prod
