@@ -3,6 +3,7 @@ import { uploadPhoto } from './FileService';
 import { CredentialResponse } from '@react-oauth/google';
 
 export interface AuthResponse {
+  _id: string,
   accessToken: string;
   refreshToken: string;
 }

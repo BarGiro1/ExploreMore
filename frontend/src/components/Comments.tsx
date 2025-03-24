@@ -11,7 +11,7 @@ import Logout from './Logout';
 
 
 const Comments: React.FC = () => {
-  const { accessToken } = useAuth();
+  const { _id, accessToken } = useAuth();
   const { postId } = useParams<{ postId: string }>();
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -111,53 +111,66 @@ const Comments: React.FC = () => {
             {error && <Alert variant="danger">{error}</Alert>}
             <h3 className="text-center">Comments</h3>
             {comments.map((comment) => (
-              <Card key={comment._id} className="mb-3 shadow-sm rounded">
-                <Card.Body>
-                  {editingCommentId === comment._id ? (
-                    <Form onSubmit={handleEditComment}>
-                      <Form.Group className="mb-3" controlId="formEditContent">
-                        <Form.Label>Edit your comment</Form.Label>
-                        <Form.Control
-                          as="textarea"
-                          rows={3}
-                          value={editingContent}
-                          onChange={(e) => setEditingContent(e.target.value)}
-                          placeholder="Edit your comment"
-                          className="rounded-pill px-3 py-2"
-                        />
-                      </Form.Group>
-                      <Button variant="primary" type="submit" className="w-100 mb-2 rounded-pill">
-                        Update Comment
-                      </Button>
-                      <Button variant="secondary" onClick={cancelEditing} className="w-100 rounded-pill">
-                        Cancel
-                      </Button>
-                    </Form>
-                  ) : (
-                    <>
-                      <div className="d-flex justify-content-between align-items-center mb-3">
-                        <span className="text-muted" style={{ fontSize: '0.9rem' }}>
-                          {new Date(comment.createdAt!).toLocaleString()}
-                        </span>
-                        <div>
-                          {comment.user._id === accessToken && (
-                            <>
-                              <Button variant="outline-primary" onClick={() => startEditingComment(comment)} size="sm" className="rounded-pill me-2">
-                                <FaEdit /> Edit
-                              </Button>
-                              <Button variant="outline-danger" onClick={() => handleDeleteComment(comment._id!)} size="sm" className="rounded-pill">
-                                <FaTrash /> Delete
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                      <Card.Text className="fw-bold" style={{ fontSize: '1.1rem' }}>{comment.user.username}</Card.Text>
-                      <Card.Text className="mb-2" style={{ fontSize: '1rem' }}>{comment.content}</Card.Text>
-                    </>
-                  )}
-                </Card.Body>
-              </Card>
+  <Card key={comment._id} className="mb-3 shadow-sm rounded">
+    <Card.Body>
+      {editingCommentId === comment._id ? (
+        <Form onSubmit={handleEditComment}>
+          <Form.Group className="mb-3" controlId="formEditContent">
+            <Form.Label>Edit your comment</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={editingContent}
+              onChange={(e) => setEditingContent(e.target.value)}
+              placeholder="Edit your comment"
+              className="rounded-pill px-3 py-2"
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit" className="w-100 mb-2 rounded-pill">
+            Update Comment
+          </Button>
+          <Button variant="secondary" onClick={cancelEditing} className="w-100 rounded-pill">
+            Cancel
+          </Button>
+        </Form>
+      ) : (
+        <>
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <Card.Text className="fw-bold mb-1" style={{ fontSize: '1.1rem' }}>
+                {comment.user.username}
+              </Card.Text>
+              <Card.Text className="mb-2 text-muted" style={{ fontSize: '0.9rem' }}>
+                {new Date(comment.createdAt!).toLocaleString()}
+              </Card.Text>
+              <Card.Text style={{ fontSize: '1rem' }}>{comment.content}</Card.Text>
+            </div>
+            {comment.user._id === _id && (
+              <div className="d-flex gap-2">
+                <Button
+                  variant="outline-primary"
+                  onClick={() => startEditingComment(comment)}
+                  size="sm"
+                  className="rounded-pill"
+                >
+                  <FaEdit />
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  onClick={() => handleDeleteComment(comment._id!)}
+                  size="sm"
+                  className="rounded-pill"
+                >
+                  <FaTrash />
+                </Button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </Card.Body>
+  </Card>
+
             ))}
           </Col>
         </Row>

@@ -33,7 +33,7 @@ const googleSignin = async (req: Request, res: Response) => {
                 return;
             }
             res.status(200).send({
-                userId: user._id,
+                _id: user._id,
                 email: user.email,
                 ...tokens
             });
