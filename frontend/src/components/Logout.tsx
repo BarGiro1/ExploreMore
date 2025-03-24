@@ -13,7 +13,7 @@ const Logout: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate('/auth/login');
+      navigate('/authentication/login');
       toast.success('Logged out successfully!');
     } catch (err) {
       toast.error('Failed to logout');

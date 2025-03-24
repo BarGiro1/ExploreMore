@@ -6,7 +6,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import { FaUser } from 'react-icons/fa';
 import 'react-toastify/dist/ReactToastify.css';
 
-const DEFAULT_PROFILE_IMAGE_URL = 'http://localhost:3001/public/default_avatar.png';
+
+const backend_url = import.meta.env.VITE_BACKEND_URL
+const DEFAULT_PROFILE_IMAGE_URL = `${backend_url}/public/default_avatar.png`;
 
 const Profile: React.FC = () => {
   const { accessToken } = useAuth();
@@ -21,6 +23,7 @@ const Profile: React.FC = () => {
         try {
           const profile = await fetchUserProfile(accessToken);
           setProfile(profile);
+          setNewUsername(profile.username);
         } catch (err) {
           toast.error('Failed to fetch profile');
         }
@@ -32,8 +35,8 @@ const Profile: React.FC = () => {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (accessToken && newUsername) {
-      const updatedProfile = { email: profile.email, username: newUsername };
+    if (accessToken) {
+      const updatedProfile = { email: profile.email, username: newUsername || profile.username };
       try {
         await updateUserProfile(accessToken, updatedProfile, newImage);
         const profile = await fetchUserProfile(accessToken);

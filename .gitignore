@@ -31,3 +31,11 @@ frontend/.env*
 *.zip
 .env
 .env_prod
+
+*.pem
+*.csr
+backend/*.pem
+backend/*.csr
+frontend/.env.production
+backend/public/*
+backend/front/*

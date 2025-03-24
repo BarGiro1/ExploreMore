@@ -22,7 +22,7 @@ const Register = () => {
       console.log('Registration successful');
       toast.success('Registration successful!');
       setTimeout(() => {
-        navigate("/auth/login");
+        navigate("/authentication/login");
       }, 1000); 
     } catch (error) {
       console.error('Registration failed:', error);
@@ -54,7 +54,7 @@ const Register = () => {
         <div className="text-center mb-3">
           <h4 className="fw-bold mb-1">Sign Up</h4>
           <small>
-            Already have an account? <a href="/auth/login">Sign in</a>
+            Already have an account? <a href="/authentication/login">Sign in</a>
           </small>
         </div>
 

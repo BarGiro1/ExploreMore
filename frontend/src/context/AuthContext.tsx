@@ -2,9 +2,7 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { 
   login as loginService, 
   register as registerService, 
-  logout as logoutService,
   googleSignIn as googleSignInService,
-  AuthResponse 
 } from '../services/AuthService';
 import { CredentialResponse } from '@react-oauth/google';
 

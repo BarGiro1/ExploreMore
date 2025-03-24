@@ -11,6 +11,7 @@ import usersRoutes from './routes/users_routes';
 import likesRoutes from './routes/likes_routes';
 import authRoutes from './routes/auth_routes';
 import fileRoutes from './routes/files_routes';
+import path from 'path';
 
 
 const app = express();
@@ -31,27 +32,42 @@ app.use('/likes', likesRoutes);
 app.use('/files', fileRoutes);
 app.use('/public', express.static('public'));
 
+console.log(__dirname)
+const frontendPath = path.join(__dirname, '..', '..', 'front')
+app.use(express.static(frontendPath));
 
-if (process.env.NODE_ENV === 'development') {
-  const options = {
-    definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'Blog API',
-        version: '1.0.0',
-        description: 'A simple Express Library API',
-      },
-      servers: [
-        {
-          url: 'http://localhost:3000',
-        },
-      ],
+// Serve index.html for unknown routes (SPA)
+app.get('*', (_, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
+
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Blog API',
+      version: '1.0.0',
+      description: 'A simple Express Library API',
     },
-    apis: ['./src/routes/*.ts'],
-  };
-  const specs = swaggerDocument(options);
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-}
+    servers: [
+      {
+        url: 'http://localhost:3000',
+      },
+      {
+        url: 'http://10.10.246.87'
+      },
+      {
+        url: 'https://10.10.246.87'
+      }
+    ],
+  },
+  apis: ['./src/routes/*.ts'],
+};
+const specs = swaggerDocument(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+
 const initApp = () => {
   return new Promise<Express>((resolve, reject) => {
     const db = mongoose.connection;

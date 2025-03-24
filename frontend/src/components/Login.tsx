@@ -61,7 +61,7 @@ const Login = () => {
           <div className="text-center mb-3">
             <h4 className="fw-bold mb-1">Login</h4>
             <small>
-              Don’t have an account? <a href="/auth/register">Sign up</a>
+              Don’t have an account? <a href="/authentication/register">Sign up</a>
             </small>
           </div>
 

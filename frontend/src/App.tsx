@@ -10,7 +10,7 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           <Route path="/*" element={<UserRoutes />} />
-          <Route path="/auth/*" element={<AuthRoutes />} />
+          <Route path="/authentication/*" element={<AuthRoutes />} />
         </Routes>
       </Router>
     </AuthProvider>

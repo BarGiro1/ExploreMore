@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { fetchComments, deleteComment, updateComment, Comment } from '../services/CommentService';
 import { fetchPost, Post } from '../services/PostService';
-import { Card, Button, Form, Container, Row, Col, Alert, Nav, Navbar, Image } from 'react-bootstrap';
-import { FaTrash, FaEdit, FaHome, FaUser, FaSignOutAlt } from 'react-icons/fa';
-import { fetchUserProfile } from '../services/UserService';
+import { Card, Button, Form, Container, Row, Col, Alert, Nav, Navbar } from 'react-bootstrap';
+import { FaTrash, FaEdit, FaHome } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Profile from './Profile';
 import Logout from './Logout';
 
-const DEFAULT_PROFILE_IMAGE_URL = 'http://localhost:3001/public/default_avatar.png';
 
 const Comments: React.FC = () => {
   const { accessToken } = useAuth();
   const { postId } = useParams<{ postId: string }>();
-  const navigate = useNavigate();
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [error, setError] = useState('');

@@ -3,14 +3,15 @@ import { useAuth } from '../context/AuthContext';
 import { fetchPosts, createPost, likePost, unlikePost, commentOnPost, deletePost, updatePost } from '../services/PostService';
 import { fetchUserProfile, updateUserProfile } from '../services/UserService';
 import { Card, Button, Form, Container, Row, Col, Alert, Nav, Navbar, Image, Modal } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaTrash, FaEdit, FaThumbsUp, FaThumbsDown, FaComment, FaHome, FaFilter } from 'react-icons/fa'; // Import icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Profile from './Profile';
 import Logout from './Logout';
 
-const DEFAULT_PROFILE_IMAGE_URL = 'http://localhost:3001/public/default_avatar.png';
+const backend_url = import.meta.env.VITE_BACKEND_URL
+const DEFAULT_PROFILE_IMAGE_URL = `${backend_url}/public/default_avatar.png`;
 
 interface Post {
   title: string;
@@ -19,7 +20,6 @@ interface Post {
 }
 
 const Home: React.FC = () => {
-  const navigate = useNavigate();
   const { accessToken } = useAuth();
   const [posts, setPosts] = useState<any[]>([]);
   const [title, setTitle] = useState('');
@@ -384,7 +384,7 @@ const Home: React.FC = () => {
                         </Form>
                         <div className="d-flex justify-content-end align-items-center">
                           <span style={{ margin: '10px' }}>{post.numOfLikes} Likes</span>
-                          <Link to={`/posts/${post._id}/comments`}>{post.numOfComments} Comments</Link>
+                          <Link to={`/post/${post._id}/comments`}>{post.numOfComments} Comments</Link>
                         </div>
                       </>
                     )}

@@ -14,6 +14,7 @@ const getMe = async (req: Request, res: Response) => {
 
 const getAllUsers = async (req:Request , res: Response) => {
     try {
+        console.log('get all users')
         const users = await usersModel.find();
         res.send(users);
     } catch (error) {
