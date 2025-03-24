@@ -12,6 +12,7 @@ import likesRoutes from './routes/likes_routes';
 import authRoutes from './routes/auth_routes';
 import fileRoutes from './routes/files_routes';
 import path from 'path';
+import aiRotes from './routes/ai_routes';
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/users', usersRoutes);
 app.use('/likes', likesRoutes);
 app.use('/files', fileRoutes);
 app.use('/public', express.static('public'));
+app.use('/ai', aiRotes);
 
 console.log(__dirname)
 const frontendPath = path.join(__dirname, '..', '..', 'front')

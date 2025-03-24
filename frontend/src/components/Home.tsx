@@ -9,9 +9,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Profile from './Profile';
 import Logout from './Logout';
+import { solveRiddle } from '../services/AiService';
+
 
 const backend_url = import.meta.env.VITE_BACKEND_URL
 const DEFAULT_PROFILE_IMAGE_URL = `${backend_url}/public/default_avatar.png`;
+
 
 interface Post {
   title: string;
@@ -37,6 +40,9 @@ const Home: React.FC = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
+  const [riddleSolutions, setRiddleSolutions] = useState<{ [key: string]: string }>({});
+const [loadingRiddles, setLoadingRiddles] = useState<{ [key: string]: boolean }>({});
+
 
   const lastPostRef = useCallback((node: HTMLElement | null) => {
     if (observer.current) observer.current.disconnect();
@@ -208,7 +214,18 @@ const Home: React.FC = () => {
       }
     }
   };
-
+  const handleSolveRiddle = async (postId: string, content: string) => {
+    setLoadingRiddles(prev => ({ ...prev, [postId]: true }));
+    try {
+      const solution = await solveRiddle(content);
+      setRiddleSolutions(prev => ({ ...prev, [postId]: solution }));
+    } catch (error) {
+      setRiddleSolutions(prev => ({ ...prev, [postId]: 'שגיאה בקבלת פתרון' }));
+    } finally {
+      setLoadingRiddles(prev => ({ ...prev, [postId]: false }));
+    }
+  };
+  
   const filteredPosts = showUserPosts
     ? posts.filter((post) => post.isCreatedByCurrentUser)
     : posts;
@@ -235,7 +252,8 @@ const Home: React.FC = () => {
           <Row className="justify-content-md-center">
             <Col md={8}>
               <br></br><br></br>
-              <h2 className="text-center"> </h2>
+              <h2 className="text-center"> חידות </h2>
+              <br></br>
               {error && <Alert variant="danger">{error}</Alert>}
               <Form onSubmit={handleCreatePost}>
                 <Form.Group className="mb-3" controlId="formTitle">
@@ -284,6 +302,22 @@ const Home: React.FC = () => {
               {filteredPosts.map((post, index) => (
                 <Card key={post._id} className="mb-3" ref={filteredPosts.length === index + 1 ? lastPostRef : null}>
                   <Card.Body>
+                  <Button
+                        variant="outline-success"
+                        size="sm"
+                        className="rounded-pill px-3 py-1 mb-2"
+                        onClick={() => handleSolveRiddle(post._id, post.content)}
+                        disabled={loadingRiddles[post._id]}
+                      >
+                        {loadingRiddles[post._id] ? 'מחשב פתרון...' : 'פתור לי את החידה'}
+                      </Button>
+
+                      {riddleSolutions[post._id] && (
+                        <Card.Text className="mt-2">
+                          <strong>פתרון:</strong> {riddleSolutions[post._id]}
+                        </Card.Text>
+                      )}
+
                     {editingPostId === post._id ? (
                       <Form onSubmit={handleEditPost}>
                         <Form.Group className="mb-3" controlId="formEditTitle">
